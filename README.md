@@ -284,17 +284,6 @@ Please read [CONTRIBUTING.md](./CONTRIBUTING.md) for details on our code of cond
 
 This project is licensed under the MIT License - see the [LICENSE](./LICENSE) file for details.
 
-## Security Notes
-
-⚠️ **Hackathon Prototype**: This is a demonstration project. For production use:
-1. Use hardware security modules or key management services for private keys
-2. Generate a strong JWT secret with `openssl rand -hex 32`
-3. Use PostgreSQL with encryption at rest
-4. Enable HTTPS with valid SSL certificates
-5. Restrict CORS origins to your domain
-6. Add rate limiting to prevent abuse
-7. Implement proper WebAuthn verification
-
 ## Support
 
 For issues or questions, please open a GitHub issue or check the API documentation at http://localhost:8000/docs
