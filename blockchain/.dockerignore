@@ -1,0 +1,17 @@
+node_modules
+artifacts
+cache
+deployments.json
+.env
+.env.local
+.git
+.gitignore
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db
+README.md
+*.md

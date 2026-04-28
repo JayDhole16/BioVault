@@ -1,0 +1,38 @@
+node_modules/
+dist/
+build/
+.next/
+out/
+*.log
+.DS_Store
+*.sqlite
+*.sqlite3
+*.db
+
+# Environment
+.env
+.env.local
+.env.*.local
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Blockchain
+artifacts/
+cache/
+deployments.json
+
+# OS
+Thumbs.db

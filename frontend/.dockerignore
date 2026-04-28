@@ -1,0 +1,17 @@
+node_modules
+.next
+out
+.git
+.gitignore
+.env
+.env.local
+.env.*.local
+README.md
+*.md
+.vscode
+.idea
+*.swp
+*.swo
+*~
+.DS_Store
+Thumbs.db

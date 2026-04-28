@@ -1,0 +1,87 @@
+version: '3.8'
+
+services:
+  # Hardhat Local Blockchain Network
+  hardhat:
+    build:
+      context: ./blockchain
+      dockerfile: Dockerfile
+    ports:
+      - "8545:8545"
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8545"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - biovault-network
+
+  # Backend API (FastAPI)
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      - APP_NAME=BioVault API
+      - DEBUG=True
+      - API_HOST=0.0.0.0
+      - API_PORT=8000
+      - API_PREFIX=/api/v1
+      - CORS_ORIGINS=["http://localhost:3000","http://localhost:8000"]
+      - DATABASE_URL=sqlite:///./data/biovault.db
+      - DB_TYPE=sqlite
+      - SECRET_KEY=your-super-secret-key-change-in-production-use-openssl-rand-hex-32
+      - ALGORITHM=HS256
+      - ACCESS_TOKEN_EXPIRE_MINUTES=30
+      - REFRESH_TOKEN_EXPIRE_DAYS=7
+      - RP_ID=localhost
+      - RP_NAME=BioVault
+      - RP_ORIGIN=http://localhost:3000
+      - HARDHAT_RPC_URL=http://hardhat:8545
+      - NETWORK=hardhat
+      - MODEL_PATH=/app/ml_models/fraud_detection_model.pkl
+      - MODEL_SCALER_PATH=/app/ml_models/scaler.pkl
+      - FRAUD_THRESHOLD=0.5
+      - HIGH_RISK_THRESHOLD=0.7
+    depends_on:
+      hardhat:
+        condition: service_healthy
+    volumes:
+      - backend_data:/app/data
+    healthcheck:
+      test: ["CMD", "wget", "-q", "--spider", "http://localhost:8000/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - biovault-network
+
+  # Frontend (Next.js)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    environment:
+      - NEXT_PUBLIC_API_URL=http://localhost:8000
+      - NEXT_PUBLIC_WALLET_NETWORK=hardhat
+      - NEXT_PUBLIC_RPC_URL=http://localhost:8545
+      - NEXT_PUBLIC_RP_ID=localhost
+      - NEXT_PUBLIC_RP_NAME=BioVault
+      - NEXT_PUBLIC_ORIGIN=http://localhost:3000
+      - BACKEND_URL=http://backend:8000
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - biovault-network
+
+volumes:
+  backend_data:
+
+networks:
+  biovault-network:
+    driver: bridge
